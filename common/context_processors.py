@@ -1,5 +1,4 @@
 
-# common/context_processors.py
 
 def site_settings(request):
     return {

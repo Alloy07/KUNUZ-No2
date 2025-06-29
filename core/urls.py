@@ -31,7 +31,6 @@ urlpatterns = [
     path("account/", include("account.urls")),
     path("news/", include("news.urls")),
     path("admin/", admin.site.urls),
-    # Swagger and Redoc URLs
     re_path(
         r"^swagger(?P<format>\.json|\.yaml)$",
         schema_view.without_ui(cache_timeout=0),
