@@ -6,6 +6,8 @@ from account.manager import UserManager
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
 class User(AbstractUser, BaseModel):
+
+    email = models.EmailField(unique=True)
     email = models.EmailField(unique=True)
     hash_password = models.CharField(max_length=128)
     first_name = models.CharField(max_length=30, null=True, blank=True)
