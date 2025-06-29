@@ -13,6 +13,13 @@ from news.api_endpoints.Category import (
     CategoryListAPIView,
 )
 
+from news.api_endpoints.News import ( 
+    NewsListAPIView,
+    NewsCreateAPIView,  
+    NewsUpdateAPIView,
+    NewsDeleteAPIView,
+)
+
 
 urlpatterns = [
     path('tags/', TagListAPIView.as_view(), name='tag-list'),
@@ -23,4 +30,8 @@ urlpatterns = [
     path('categories/create/', CategoryCreateAPIView.as_view(), name='category-create'),
     path('categories/<int:pk>/update/', CategoryUpdateAPIView.as_view(), name='category-update'),
     path('categories/<int:pk>/delete/', CategoryDeleteAPIView.as_view(), name='category-delete'),
+    path('news/', NewsListAPIView.as_view(), name='news-list'),
+    path('news/create/', NewsCreateAPIView.as_view(), name='news-create'),
+    path('news/<int:pk>/update/', NewsUpdateAPIView.as_view(), name='news-update'),
+    path('news/<int:pk>/delete/', NewsDeleteAPIView.as_view(), name='news-delete'),
 ]

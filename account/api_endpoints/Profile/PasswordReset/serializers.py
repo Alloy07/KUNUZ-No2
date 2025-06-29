@@ -1,13 +1,11 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
+from rest_framework import serializers
 
-from account.api_endpoints.Profile.PasswordReset.tokens import (
-    generate_password_reset_token, 
-    verify_password_reset_token
-)
+from account.tokens import generate_email_confirm_token, verify_email_confirm_token
 
 User = get_user_model()
+
 
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -18,25 +16,25 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError("No active user found with this email.")
         return value
-    
+
     def save(self):
-        token = generate_password_reset_token(self.user)
-        send_email_task = self.context["send-email"]
+        token = generate_email_confirm_token(self.user)
+        send_email_task = self.context["send_email"]
         send_email_task.delay(
-            subject="Password Reset Request",
-            intro_text = 'click the link below to reset your password',
-            email = self.validated_data["email"],
-            token = token,
-            template="email/reset_password_email.html"
-    )
-        
+            subject="Reset your password",
+            intro_text="Click the link below to reset your password.",
+            email=self.validated_data["email"],
+            token=token,
+            template="email/reset_password_email.html",
+        )
+
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     token = serializers.CharField()
     new_password = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
-        user_id = verify_password_reset_token(attrs["token"])
+        user_id = verify_email_confirm_token(attrs["token"])
         if not user_id:
             raise serializers.ValidationError("Invalid or expired token.")
         self.user = User.objects.get(pk=user_id)

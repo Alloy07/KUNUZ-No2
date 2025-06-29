@@ -16,12 +16,6 @@ def send_email(subject, intro_text, email, token, template, password=None):
         "frontend_url": "Kunuz.com",
     }
     html_content = render_to_string(template, context)
-    email = email = EmailMessage(
-    subject,
-    html_content,
-    from_email='your_email@gmail.com',  # <-- Add your valid sender email here
-    to=[to_email]
-)
-
+    email = EmailMessage(subject, html_content, to=[to_email])
     email.content_subtype = "html"
     email.send()
